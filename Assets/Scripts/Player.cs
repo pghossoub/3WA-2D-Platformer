@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     {
         STANDING,
         JUMPING,
-        LANDING
+        LANDING,
+        STRIKING
     }
 
     private State _state = State.STANDING;
@@ -42,22 +43,26 @@ public class Player : MonoBehaviour
         switch (_state)
         {
             case (State.STANDING):
-
                 MoveHorizontal();
                 AnimWalk();
                 PrepareJump();
                 PrepareFalling();
+                PrepareStrike();
 
                 break;
+
+            case (State.STRIKING):
+                MoveHorizontal();
+                AnimWalk();
+                PrepareJump();
+                PrepareFalling();
+                break;
+
 
             case (State.JUMPING):
                 MoveHorizontal();
                 PrepareToLand();
-                if (Input.GetButtonDown("Jump") && nbCurrentDoubleJumps < nbDoubleJumps)
-                {
-                    StartCoroutine(Jump());
-                    nbCurrentDoubleJumps++;
-                }
+                PrepareDoubleJump();
                 break;
 
             case (State.LANDING):
@@ -65,6 +70,31 @@ public class Player : MonoBehaviour
                 break;
         }
         //Debug.Log(_state);
+    }
+
+    private void PrepareStrike()
+    {
+        if (Input.GetButtonDown("Fire3"))
+        {
+            _state = State.STRIKING;
+            StartCoroutine(Strike());
+        }
+    }
+
+    private IEnumerator Strike()
+    {
+        _anim.SetTrigger(Animator.StringToHash("Strike"));
+        yield return new WaitForSeconds(0.5f);
+        _state = State.STANDING;
+    }
+
+    private void PrepareDoubleJump()
+    {
+        if (Input.GetButtonDown("Jump") && nbCurrentDoubleJumps < nbDoubleJumps)
+        {
+            StartCoroutine(Jump());
+            nbCurrentDoubleJumps++;
+        }
     }
 
     private void PrepareFalling()
