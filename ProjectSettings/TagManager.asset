@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Axe
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -14,8 +16,8 @@ TagManager:
   - 
   - 
   - Player
-  - Obstacle
-  - 
+  - Obstacle_Back
+  - Obstacle_Front
   - 
   - 
   - 
@@ -41,9 +43,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Obstacle
+  - name: Obstacle_Back
     uniqueID: 4171520823
     locked: 0
   - name: Player
     uniqueID: 1477776819
+    locked: 0
+  - name: Obstacle_Front
+    uniqueID: 2963379797
     locked: 0
