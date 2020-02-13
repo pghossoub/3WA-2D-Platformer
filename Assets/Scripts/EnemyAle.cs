@@ -33,6 +33,7 @@ public class EnemyAle : MonoBehaviour
     {
         while (gameObject)
         {
+            //PROBLEM: coroutine must be done before WaitForSeconds, else several move at the same time
             StartCoroutine(Move(_targetPosition));
             yield return new WaitForSeconds(1.0f);
             StartCoroutine(Move(_originPosition));
@@ -46,7 +47,7 @@ public class EnemyAle : MonoBehaviour
         while ((Vector2)transform.position != targetPosition)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
-            yield return new WaitForSeconds(Time.deltaTime);
+            yield return new WaitForSeconds(/*Time.deltaTime*/0);
         }
 
         //targetPosition = (Vector2)transform.position - targetPosition;

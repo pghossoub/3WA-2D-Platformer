@@ -268,15 +268,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.3
         value: {x: 0.05, y: -1.51, z: 0}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
+        inSlope: {x: 0, y: 0.13999987, z: 0}
+        outSlope: {x: 0, y: 0.13999987, z: 0}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.5
-        value: {x: 0.34, y: -1.55, z: 0}
+        value: {x: 0.65, y: -1.48, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -1006,7 +1006,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.5
-        value: 0.34
+        value: 0.65
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1035,15 +1035,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.3
         value: -1.51
-        inSlope: 0
-        outSlope: 0
+        inSlope: 0.13999987
+        outSlope: 0.13999987
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.5
-        value: -1.55
+        value: -1.48
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1879,7 +1879,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: dwarf_right_foot
+    path: dwarf_left_front_hand
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1889,7 +1889,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: dwarf_right_foot
+    path: dwarf_left_front_hand
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1899,7 +1899,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: dwarf_right_foot
+    path: dwarf_left_front_hand
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1969,7 +1969,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: dwarf_left_foot
+    path: dwarf_right_foot
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1979,7 +1979,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: dwarf_left_foot
+    path: dwarf_right_foot
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1989,7 +1989,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: dwarf_left_foot
+    path: dwarf_right_foot
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1999,7 +1999,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: dwarf_left_front_hand
+    path: dwarf_left_foot
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2009,7 +2009,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: dwarf_left_front_hand
+    path: dwarf_left_foot
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2019,7 +2019,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: dwarf_left_front_hand
+    path: dwarf_left_foot
     classID: 4
     script: {fileID: 0}
   - curve:

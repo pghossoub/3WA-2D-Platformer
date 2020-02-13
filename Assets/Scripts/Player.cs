@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     {
         STANDING,
         JUMPING,
+        FALLING,
         LANDING,
         HURT
     }
@@ -52,13 +53,21 @@ public class Player : MonoBehaviour
                 PrepareJump();
                 PrepareFalling();
                 PrepareStrike();
+                _anim.SetTrigger(Animator.StringToHash("Landing"));
                 break;
 
             case (State.JUMPING):
                 MoveHorizontal();
-                PrepareToLand();
                 PrepareDoubleJump();
                 PrepareFalling();
+                PrepareStrike();
+                break;
+
+            case (State.FALLING):
+                MoveHorizontal();
+                PrepareToLand();
+                PrepareDoubleJump();
+                //PrepareFalling();
                 PrepareStrike();
                 break;
 
@@ -70,7 +79,8 @@ public class Player : MonoBehaviour
             case (State.HURT):
                 break;
         }
-        //Debug.Log(_state);
+        Debug.Log(_state);
+        //Debug.Log(_nbCurrentDoubleJumps);
     }
 
     public void HitPlayer(Collider2D collision)
@@ -103,7 +113,6 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Fire3") && Time.time > _nextAttack)
         {
             _nextAttack = Time.time + m_attackRate;
-            //_state = State.STRIKING;
             StartCoroutine(Strike());
         }
     }
@@ -131,16 +140,18 @@ public class Player : MonoBehaviour
 
     private IEnumerator Jump()
     {
-        //_state = State.JUMPING;
+        _state = State.JUMPING;
         yield return new WaitForSeconds(0.2f);
         _rb.velocity = new Vector2(_rb.velocity.x, Time.deltaTime * m_jumpIntensity);
+        yield return new WaitForSeconds(0.2f);
+        _state = State.FALLING;
     }
 
     private void PrepareDoubleJump()
     {
         if (Input.GetButtonDown("Jump") && _nbCurrentDoubleJumps < _nbDoubleJumps)
         {
-            //_state = State.JUMPING;
+            _state = State.JUMPING;
             StartCoroutine(Jump());
             _nbCurrentDoubleJumps++;
         }
@@ -150,8 +161,8 @@ public class Player : MonoBehaviour
     {
         if (_rb.velocity.y < 0)
         {
-            Debug.Log("Fall");
-            _state = State.JUMPING;
+            //Debug.Log("Fall");
+            _state = State.FALLING;
             _anim.SetTrigger(Animator.StringToHash("Fall"));
         }
     }
@@ -161,7 +172,6 @@ public class Player : MonoBehaviour
         if (CheckIfOnGround() && _rb.velocity.y < 0)
         {
             _state = State.LANDING;
-            //_state = State.STANDING;
             _anim.SetTrigger(Animator.StringToHash("Landing"));
             StartCoroutine(Land());
         }
@@ -169,7 +179,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator Land()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         _state = State.STANDING;
     }
 
