@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public float m_maxVelocityX;
     public float m_jumpIntensity;
     public LayerMask m_layerGround;
+    public LayerMask m_layerMovingGround;
     public float m_attackRate;
     public float m_damageRate;
     public float m_forcePush;
@@ -48,12 +49,13 @@ public class Player : MonoBehaviour
         switch (_state)
         {
             case (State.STANDING):
+                PrepareToLand();
                 MoveHorizontal();
                 AnimWalk();
-                PrepareJump();
                 PrepareFalling();
+                PrepareJump();  
                 PrepareStrike();
-                _anim.SetTrigger(Animator.StringToHash("Landing"));
+                FollowMovingFloor();
                 break;
 
             case (State.JUMPING):
@@ -61,24 +63,31 @@ public class Player : MonoBehaviour
                 PrepareDoubleJump();
                 PrepareFalling();
                 PrepareStrike();
+                //problem is if it lands here. State standing, but no trigger landing
                 break;
 
             case (State.FALLING):
+                _anim.SetTrigger(Animator.StringToHash("Fall"));
                 MoveHorizontal();
                 PrepareToLand();
                 PrepareDoubleJump();
-                //PrepareFalling();
                 PrepareStrike();
                 break;
-
+/*
             case (State.LANDING):
                 _rb.velocity = Vector2.zero;
                 _nbCurrentDoubleJumps = 0;
+                FollowMovingFloor();
                 break;
-
+*/
             case (State.HURT):
                 break;
         }
+
+        /*if(_state == State.STANDING)
+        {
+            _anim.SetTrigger(Animator.StringToHash("Landing"));
+        }*/
         Debug.Log(_state);
         //Debug.Log(_nbCurrentDoubleJumps);
     }
@@ -125,7 +134,6 @@ public class Player : MonoBehaviour
         _axeCollider.enabled = true;
         yield return new WaitForSeconds(0.25f);
         _axeCollider.enabled = false;
-        //_state = State.STANDING;
     }
 
     private void PrepareJump()
@@ -133,11 +141,13 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             _anim.SetTrigger(Animator.StringToHash("Jump"));
-            _state = State.JUMPING;
-            StartCoroutine(Jump());
+            //_state = State.JUMPING;
+            //StartCoroutine(Jump());
+            JumpTest();
         }
     }
 
+    /*
     private IEnumerator Jump()
     {
         _state = State.JUMPING;
@@ -146,19 +156,28 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         _state = State.FALLING;
     }
+    */
+
+    private void JumpTest()
+    {
+        _state = State.JUMPING;
+        _rb.velocity = new Vector2(_rb.velocity.x, Time.deltaTime * m_jumpIntensity);
+    }
 
     private void PrepareDoubleJump()
     {
         if (Input.GetButtonDown("Jump") && _nbCurrentDoubleJumps < _nbDoubleJumps)
         {
-            _state = State.JUMPING;
-            StartCoroutine(Jump());
+            //_state = State.JUMPING;
+            //StartCoroutine(Jump());
+            JumpTest();
             _nbCurrentDoubleJumps++;
         }
     }
 
     private void PrepareFalling()
     {
+        //If falling with a certain speed
         if (_rb.velocity.y < 0)
         {
             //Debug.Log("Fall");
@@ -169,20 +188,27 @@ public class Player : MonoBehaviour
 
     private void PrepareToLand()
     {
-        if (CheckIfOnGround() && _rb.velocity.y < 0)
+        if (CheckIfOnGround() && _rb.velocity.y <= 0)
         {
-            _state = State.LANDING;
+            //_state = State.LANDING;
             _anim.SetTrigger(Animator.StringToHash("Landing"));
-            StartCoroutine(Land());
+            //StartCoroutine(Land());
+
+            //-------- NEW WAY -----------
+            _state = State.STANDING;
+            _rb.velocity = Vector2.zero;
+            _nbCurrentDoubleJumps = 0;
+            //----------------------------
         }
     }
 
+    /*
     private IEnumerator Land()
     {
         yield return new WaitForSeconds(0.05f);
         _state = State.STANDING;
     }
-
+    */
     private void AnimWalk()
     {
         _anim.SetFloat(Animator.StringToHash("VelocityX"), Mathf.Abs(_rb.velocity.x) / m_maxVelocityX);
@@ -214,6 +240,35 @@ public class Player : MonoBehaviour
                         m_layerGround
                         );
 
-        return(hit.collider);
+        if(!hit.collider)
+            hit = Physics2D.Raycast(
+                        _tr.position,
+                        Vector2.down,
+                        _distanceTocheckGround,
+                        m_layerMovingGround
+                        );
+
+        return (hit.collider);
+    }
+
+    private void FollowMovingFloor()
+    {
+        RaycastHit2D hit;
+        hit = Physics2D.Raycast(
+                        _tr.position,
+                        Vector2.down,
+                        _distanceTocheckGround,
+                        m_layerMovingGround
+                        );
+
+        if (hit.collider)
+        {
+            Debug.Log("On Platform");
+            _tr.SetParent(hit.transform, true);
+        }
+        else
+        {
+            _tr.SetParent(null);
+        }
     }
 }
