@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3003734755745887364}
   - component: {fileID: 3003734755745887365}
   - component: {fileID: 5774108133135259832}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: MovingFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3003734755745887361}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -103,7 +103,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 6
 --- !u!61 &3003734755745887365
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b56207b02d1f354f96dd66c2a5d957b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_speed: 500
+  m_speed: 5
   m_behaviorTime: 1
   m_waitTime: 1
-  m_direction: {x: 0, y: 1}
+  m_direction: {x: -1, y: 0}

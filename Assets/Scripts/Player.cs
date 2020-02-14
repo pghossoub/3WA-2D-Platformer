@@ -13,12 +13,14 @@ public class Player : MonoBehaviour
     public float m_damageRate;
     public float m_forcePush;
 
+    public IntVariable m_pv;
+    //public int m_pv = 3;
+
     public enum State
     {
         STANDING,
         JUMPING,
         FALLING,
-        LANDING,
         HURT
     }
 
@@ -32,6 +34,7 @@ public class Player : MonoBehaviour
     private float _nextAttack;
     private Collider2D _axeCollider;
     private float _nextDamage;
+    private bool isDead = false;
 
     void Start()
     {
@@ -53,7 +56,7 @@ public class Player : MonoBehaviour
                 MoveHorizontal();
                 AnimWalk();
                 PrepareFalling();
-                PrepareJump();  
+                PrepareJump();
                 PrepareStrike();
                 FollowMovingFloor();
                 break;
@@ -73,31 +76,29 @@ public class Player : MonoBehaviour
                 PrepareDoubleJump();
                 PrepareStrike();
                 break;
-/*
-            case (State.LANDING):
-                _rb.velocity = Vector2.zero;
-                _nbCurrentDoubleJumps = 0;
-                FollowMovingFloor();
-                break;
-*/
+
             case (State.HURT):
                 break;
         }
 
-        /*if(_state == State.STANDING)
-        {
-            _anim.SetTrigger(Animator.StringToHash("Landing"));
-        }*/
-        Debug.Log(_state);
+        //Debug.Log(_state);
         //Debug.Log(_nbCurrentDoubleJumps);
     }
 
     public void HitPlayer(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy") && Time.time > _nextDamage)
+        if (collision.CompareTag("Enemy") && Time.time > _nextDamage && !isDead)
         {
             _nextDamage = Time.time + m_damageRate;
+
+            m_pv.value--;
+            if (m_pv.value <= 0)
+            {
+                isDead = true;
+                _anim.SetBool(Animator.StringToHash("Dead"), true);
+            }
             _state = State.HURT;
+
             StartCoroutine(Hurt());
         }
     }
@@ -112,9 +113,16 @@ public class Player : MonoBehaviour
             pushDirection = Vector2.left;
         _rb.velocity = Vector2.zero;
         _rb.AddForce((pushDirection + Vector2.up) * m_forcePush);
+
         yield return new WaitForSeconds(0.5f);
 
-        _state = State.STANDING;
+        if (isDead)
+        {
+            //GameOver;
+            _rb.velocity = Vector2.zero;
+        }
+        else
+            _state = State.STANDING;
     }
 
     private void PrepareStrike()
@@ -128,7 +136,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator Strike()
     {
-       
+
         _anim.SetTrigger(Animator.StringToHash("Strike"));
         yield return new WaitForSeconds(0.25f);
         _axeCollider.enabled = true;
@@ -141,24 +149,11 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             _anim.SetTrigger(Animator.StringToHash("Jump"));
-            //_state = State.JUMPING;
-            //StartCoroutine(Jump());
-            JumpTest();
+            Jump();
         }
     }
 
-    /*
-    private IEnumerator Jump()
-    {
-        _state = State.JUMPING;
-        yield return new WaitForSeconds(0.2f);
-        _rb.velocity = new Vector2(_rb.velocity.x, Time.deltaTime * m_jumpIntensity);
-        yield return new WaitForSeconds(0.2f);
-        _state = State.FALLING;
-    }
-    */
-
-    private void JumpTest()
+    private void Jump()
     {
         _state = State.JUMPING;
         _rb.velocity = new Vector2(_rb.velocity.x, Time.deltaTime * m_jumpIntensity);
@@ -168,19 +163,15 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && _nbCurrentDoubleJumps < _nbDoubleJumps)
         {
-            //_state = State.JUMPING;
-            //StartCoroutine(Jump());
-            JumpTest();
+            Jump();
             _nbCurrentDoubleJumps++;
         }
     }
 
     private void PrepareFalling()
     {
-        //If falling with a certain speed
         if (_rb.velocity.y < 0)
         {
-            //Debug.Log("Fall");
             _state = State.FALLING;
             _anim.SetTrigger(Animator.StringToHash("Fall"));
         }
@@ -190,25 +181,13 @@ public class Player : MonoBehaviour
     {
         if (CheckIfOnGround() && _rb.velocity.y <= 0)
         {
-            //_state = State.LANDING;
             _anim.SetTrigger(Animator.StringToHash("Landing"));
-            //StartCoroutine(Land());
-
-            //-------- NEW WAY -----------
             _state = State.STANDING;
             _rb.velocity = Vector2.zero;
             _nbCurrentDoubleJumps = 0;
-            //----------------------------
         }
     }
 
-    /*
-    private IEnumerator Land()
-    {
-        yield return new WaitForSeconds(0.05f);
-        _state = State.STANDING;
-    }
-    */
     private void AnimWalk()
     {
         _anim.SetFloat(Animator.StringToHash("VelocityX"), Mathf.Abs(_rb.velocity.x) / m_maxVelocityX);
@@ -240,7 +219,7 @@ public class Player : MonoBehaviour
                         m_layerGround
                         );
 
-        if(!hit.collider)
+        if (!hit.collider)
             hit = Physics2D.Raycast(
                         _tr.position,
                         Vector2.down,
@@ -263,7 +242,6 @@ public class Player : MonoBehaviour
 
         if (hit.collider)
         {
-            Debug.Log("On Platform");
             _tr.SetParent(hit.transform, true);
         }
         else
