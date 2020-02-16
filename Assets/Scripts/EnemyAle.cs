@@ -8,17 +8,20 @@ public class EnemyAle : MonoBehaviour
     //public float m_distance;
     public float m_behaviorTime;
     public float m_waitTime;
+    public Vector2 m_direction;
 
     private AudioSource _audioSource;
     //private Vector2 _targetPosition;
     //private Vector2 _originPosition;
-    private Rigidbody2D _rb;
-    private Vector2 _direction = Vector2.right;
+    //private Rigidbody2D _rb;
+    private Vector2 _direction;
 
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        _rb = GetComponent<Rigidbody2D>();
+        //_rb = GetComponent<Rigidbody2D>();
+
+        _direction = m_direction;
         //_originPosition = (Vector2)transform.position;
         //_targetPosition = (Vector2)transform.position + Vector2.right * m_distance;
 
@@ -28,7 +31,8 @@ public class EnemyAle : MonoBehaviour
 
     private void Update()
     {
-        _rb.velocity = _direction * m_speed * Time.deltaTime;
+        //_rb.velocity = _direction * m_speed * Time.deltaTime;
+        transform.Translate(_direction * m_speed * Time.deltaTime, Space.World);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -70,13 +74,19 @@ public class EnemyAle : MonoBehaviour
         {
             _direction = Vector2.zero;
             yield return new WaitForSeconds(m_waitTime);
-            _direction = Vector2.right;
+            _direction = m_direction;
             yield return new WaitForSeconds(m_behaviorTime);
             _direction = Vector2.zero;
             yield return new WaitForSeconds(m_waitTime);
-            _direction = Vector2.left;
+            _direction = - m_direction;
             yield return new WaitForSeconds(m_behaviorTime);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position,
+            (Vector2)transform.position + m_direction * m_speed * m_behaviorTime);
     }
 
 }

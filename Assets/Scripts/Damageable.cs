@@ -12,10 +12,12 @@ public class Damageable : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     //private Collider2D _collider;
     private float _nextDamage;
+    private AudioSource audiosource;
     
 
     void Start()
     {
+        audiosource = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         //_collider = GetComponent<Collider2D>();
     }
@@ -27,6 +29,7 @@ public class Damageable : MonoBehaviour
         {
             _nextDamage = Time.time + m_damageRate;
             _hp--;
+            audiosource.Play();
 
             if (_hp == 1)
             {

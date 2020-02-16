@@ -10,12 +10,12 @@ public class MovingFloor : MonoBehaviour
     public Vector2 m_direction;
 
 
-    private Rigidbody2D _rb;
+    //private Rigidbody2D _rb;
     private Vector2 _direction;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
+        //_rb = GetComponent<Rigidbody2D>();
 
         StartCoroutine(MovePattern());
     }
@@ -42,5 +42,11 @@ public class MovingFloor : MonoBehaviour
             _direction = -m_direction;
             yield return new WaitForSeconds(m_behaviorTime);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position,
+            (Vector2)transform.position + m_direction * m_speed);
     }
 }

@@ -63,17 +63,16 @@ public class Player : MonoBehaviour
 
             case (State.JUMPING):
                 MoveHorizontal();
-                PrepareDoubleJump();
                 PrepareFalling();
+                PrepareDoubleJump();
                 PrepareStrike();
-                //problem is if it lands here. State standing, but no trigger landing
                 break;
 
             case (State.FALLING):
                 _anim.SetTrigger(Animator.StringToHash("Fall"));
                 MoveHorizontal();
-                PrepareToLand();
                 PrepareDoubleJump();
+                PrepareToLand();
                 PrepareStrike();
                 break;
 
@@ -118,7 +117,7 @@ public class Player : MonoBehaviour
 
         if (isDead)
         {
-            //GameOver;
+            //GameOver, in charge by GameManager;
             _rb.velocity = Vector2.zero;
         }
         else
@@ -157,6 +156,7 @@ public class Player : MonoBehaviour
     {
         _state = State.JUMPING;
         _rb.velocity = new Vector2(_rb.velocity.x, Time.deltaTime * m_jumpIntensity);
+        Debug.Log(_rb.velocity);
     }
 
     private void PrepareDoubleJump()
