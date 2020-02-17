@@ -179,6 +179,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: broken_wood_column
       objectReference: {fileID: 0}
+    - target: {fileID: 1344782745698459374, guid: 3f18e9f16fd36ef43bad03ded83921c1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f18e9f16fd36ef43bad03ded83921c1, type: 3}
 --- !u!1 &6273922233437341333 stripped

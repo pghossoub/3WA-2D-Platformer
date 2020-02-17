@@ -47,6 +47,6 @@ public class MovingFloor : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position,
-            (Vector2)transform.position + m_direction * m_speed);
+            (Vector2)transform.position + m_direction * m_speed * m_behaviorTime);
     }
 }
